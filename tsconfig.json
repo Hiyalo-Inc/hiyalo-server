@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig to read more about this file */
+
+    /* Language and Environment */
+    "target": "es2016",
+    /* Modules */
+    "module": "commonjs" ,
+    
+    "outDir": "./dist" /* Specify an output folder for all emitted files. */,
+    
+    "inlineSourceMap": true /* Include sourcemap files inside the emitted JavaScript. */,
+    
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+   
+    /* Type Checking */
+    // "strict": true /* Enable all strict type-checking options. */
+   
+  },
+  "exclude": ["node_modules",]
+}
