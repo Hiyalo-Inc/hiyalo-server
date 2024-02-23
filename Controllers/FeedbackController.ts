@@ -36,7 +36,7 @@ const submit_feedback = async (req, res) => {
             <p>Hiyalo House</p>
             `
 
-            mailer(['deborah@hiyalo.com'], "Customer Feedback", mail_body)
+            mailer(['deborah.benjamin@hiyalo.com'], "Customer Feedback", mail_body)
             mailer(email, "Feedback Received", mail_body_customer)
             res.status(200).json({
                 message: "success",
