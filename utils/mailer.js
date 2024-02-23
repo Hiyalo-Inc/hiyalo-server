@@ -27,7 +27,7 @@ const mailer = (receiver, subject, mailBody) => {
 
     const mailOptions = {
         // Email should be SAME as USER EMAIL above
-        from: `NRC <${SENDER_EMAIL}>`,
+        from: `Hiyalo Technologies <${SENDER_EMAIL}>`,
         // ANY Email to send the mail (to send to many use ',' inside the single quote. Eg: 'xxx@gmail.com, xxx@yahoo.com')
         to: receiver,
         subject,
