@@ -7,6 +7,9 @@ const feedbackSchema = new mongoose.Schema({
     email: {
         type: String
     },
+    phone: {
+        type: String
+    },
     text: {
         type: String
     },

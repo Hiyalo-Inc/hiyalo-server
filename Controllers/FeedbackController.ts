@@ -3,10 +3,10 @@ const { mailer } = require("../utils/mailer")
 
 const submit_feedback = async (req, res) => {
 
-    const { name, text, email } = req.body
+    const { name, text, email, phone } = req.body
 
     let data = {
-        name, text, email
+        name, text, email, phone
     }
 
     let feedback = new Feedback(data)
@@ -20,6 +20,7 @@ const submit_feedback = async (req, res) => {
             <p>Do well to review and respond as the case maybe.</p>
             <p><b>Customer Name:</b> ${name} </p>
             <p><b>Customer Email:</b> ${email} </p>
+            <p><b>Customer Phone:</b> ${phone} </p>
             <p><b>Feedback:</b> ${text}</p>
 
             <p>Kind regards,<p>
