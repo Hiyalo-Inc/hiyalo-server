@@ -9,8 +9,8 @@ const KudaWallets = require('../../Models/KudaModel');
 const kuda_auth = async () => {
 
     let data = await axios.post(`https://kuda-openapi.kuda.com/v2/Account/GetToken`, {
-        "email": "uniconneteam@gmail.com",
-        "apiKey": "Iu4oAJYM3Z8Qbi2Kdpnv"
+        "email": process.env.KUDA_EMAIL,
+        "apiKey": process.env.KUDA_KEY
     })
         .then(res => {
 
