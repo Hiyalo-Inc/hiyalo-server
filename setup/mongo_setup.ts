@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const db_init = () => {
 
-    mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true, });
+    mongoose.connect(process.env.DATABASE_URL);
     const db = mongoose.connection
 
     db.on('error', (err) => {
@@ -15,6 +15,8 @@ const db_init = () => {
     })
 
 }
+
+// { useNewUrlParser: true, useUnifiedTopology: true, }
 
 module.exports = {
     db_init

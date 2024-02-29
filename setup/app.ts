@@ -3,6 +3,9 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const feedbackRoute = require('../Routes/FeedbackRoutes.ts')
+const userRoute = require('../Routes/UserRoutes.js')
+const loanRequestRoute = require('../Routes/LoanRequestRoute.js')
+const transactionsRoute = require('../Routes/TransactionRoutes.js')
 
 const app = express()
 
@@ -12,5 +15,8 @@ app.use(cors())
 app.use(morgan('dev'))
 
 app.use('/feedbacks/', feedbackRoute)
+app.use('/user/', userRoute)
+app.use('/loan-requests/', loanRequestRoute)
+app.use('/transactions/', transactionsRoute)
 
 module.exports = app
