@@ -8,7 +8,7 @@ const send_sms = async (phone, message) => {
         from: 'Hiyalo',
         to: p,
         body: message,
-        api_token: process.env.BULK_SMS_NG_TOKEN,
+        api_token: "cq78nYRDJXm9wWHZWZJDCs390VRUdruq4gjtPqfVlaFfu1irLaAAsx9h6E8R",
         gateway: 'direct-refund'
     })
         .then(res => {

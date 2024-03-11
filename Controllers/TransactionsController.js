@@ -3,8 +3,10 @@ const Transactions = require("../Models/TransactionsModel")
 
 const get_user_transaction = async (req, res) => {
 
-    const { user_id } = req.body
+    const { user_id, skip, limit } = req.body
     Transactions.find({ user_id })
+        .skip(skip)
+        .limit(limit)
         .then(trx => {
 
             res.status(200).json({

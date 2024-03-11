@@ -5,6 +5,8 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 const { send_sms } = require("../utils/sms_util");
 const { create_kuda_wallet, create_k_wallet_util } = require("../utils/Kuda/KudaServices");
 const { mailer } = require("../utils/mailer");
+const jwt = require('jsonwebtoken');
+const KudaWallets = require("../Models/KudaModel");
 
 
 // Auths
@@ -52,6 +54,7 @@ const register_user = async (req, res) => {
                         })
                     })
                     .catch(err => {
+                        console.log(err)
                         res.status(400).json({
                             message: "Error creating user, please try again."
                         })
@@ -86,7 +89,7 @@ const login_user = async (req, res) => {
                             token,
                             email: user_.email,
                             phone: user_.phone,
-                            user_id: saved_user._id,
+                            user_id: user_._id,
                         })
                     } else {
                         res.status(409).json({
@@ -337,6 +340,10 @@ const reset_password = async (req, res) => {
                                 })
                             })
                     })
+                } else {
+                    res.status(400).json({
+                        message: "Invalid password reset code"
+                    })
                 }
             } else {
                 res.status(404).json({
@@ -359,7 +366,7 @@ const get_user_details = async (req, res) => {
             if (found_user) {
 
                 res.status(200).json({
-                    message: "User date fetched",
+                    message: "User data fetched",
                     user_data: found_user
                 })
 
@@ -375,6 +382,30 @@ const get_user_details = async (req, res) => {
             })
         })
 }
+const get_user_wallet = async (req, res) => {
+
+    const { user_id } = req.body
+
+    KudaWallets.findOne({ user_id })
+        .then(wallet => {
+            if (wallet) {
+                res.status(200).json({
+                    message: "Wallet fetched",
+                    wallet
+                })
+            } else {
+                res.status(404).json({
+                    message: "No wallet found"
+                })
+            }
+        })
+        .catch(err => {
+            res.status(400).json({
+                message: 'Error fetching user, please try again'
+            })
+        })
+}
+
 
 module.exports = {
     // Auth
@@ -384,5 +415,6 @@ module.exports = {
     send_forget_password_code, reset_password,
 
     // User activities
-    get_user_details
+    get_user_details,
+    get_user_wallet
 }
