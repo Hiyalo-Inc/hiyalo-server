@@ -174,14 +174,14 @@ const phone_verification = async (req, res) => {
 }
 const google_auth = async (req, res) => {
 
-    const { auth_token } = req.body
+    const { general_data } = req.body
 
-    const ticket = await client.verifyIdToken({
-        idToken: auth_token,
-        audience: process.env.GOOGLE_CLIENT_ID
-    });
+    // const ticket = await client.verifyIdToken({
+    //     idToken: auth_token,
+    //     audience: process.env.GOOGLE_CLIENT_ID
+    // });
 
-    let general_data = ticket.getPayload()
+    // let general_data = ticket.getPayload()
 
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 

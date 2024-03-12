@@ -1,9 +1,13 @@
 const LoanRequests = require("../Models/LoanRequestModel")
+const User = require("../Models/UserModel")
+const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const aws = require('aws-sdk');
+const fs = require('fs');
 
 
-const sharp = require('sharp')
+const sharp = require('sharp');
+const { qore_nin_verification, qore_voters_card_verification, qore_driver_license_verification, qore_international_passport_verification } = require("../utils/QoreId");
 const S3_BUCKET = process.env.S3_BUCKET;
 aws.config.region = 'us-east-2'
 
@@ -40,12 +44,126 @@ const start_loan_request = async (req, res) => {
 
 const loan_request_identification = async (req, res) => {
 
-    const { loan_id, id_type, id_number } = req.body
+    const { loan_id, id_type, id_number, user_id } = req.body
 
     let data = {
         type: "",
-        media: ""
+        media: "",
+        id_data: {},
+        verified: false
     }
+
+    const user_data = await User.findById(user_id)
+
+    if (id_type === "NIN") {
+        let v_data = await qore_nin_verification(id_number)
+
+        if (v_data.data.nin) {
+            if (`${v_data.data.nin.firstname} ${v_data.data.nin.lastname}`
+                .toLowerCase()
+                .includes(user_data.first_name.toLowerCase().trim())
+                &&
+                `${v_data.data.nin.firstname} ${v_data.data.nin.lastname}`
+                    .toLowerCase()
+                    .includes(user_data.last_name.toLowerCase().trim())
+            ) {
+
+                data.id_data = v_data.data.nin
+                data.verified = true
+
+            } else {
+                res.status(400).json({
+                    message: "NIN data does not match user details",
+                })
+                return false
+            }
+
+        } else {
+
+        }
+    }
+
+    if (id_type === "voters_Card") {
+        let v_data = await qore_voters_card_verification(id_number)
+
+        if (v_data.data.voters_card) {
+            if (`${v_data.data.voters_card.firstName} ${v_data.data.voters_card.lastName}`
+                .toLowerCase()
+                .includes(user_data.first_name.toLowerCase().trim())
+                &&
+                `${v_data.data.voters_card.firstName} ${v_data.data.voters_card.lastName}`
+                    .toLowerCase()
+                    .includes(user_data.last_name.toLowerCase().trim())
+            ) {
+
+                data.id_data = v_data.data.voters_card
+                data.verified = true
+
+            } else {
+                res.status(400).json({
+                    message: "Votar's card data does not match user details",
+                })
+            }
+
+        } else {
+
+        }
+    }
+
+    if (id_type === "drivers_license") {
+        let v_data = await qore_driver_license_verification(id_number)
+
+        if (v_data.data.drivers_license) {
+            if (`${v_data.data.drivers_license.firstname} ${v_data.data.drivers_license.lastname}`
+                .toLowerCase()
+                .includes(user_data.first_name.toLowerCase().trim())
+                &&
+                `${v_data.data.drivers_license.firstname} ${v_data.data.drivers_license.lastname}`
+                    .toLowerCase()
+                    .includes(user_data.last_name.toLowerCase().trim())
+            ) {
+
+                data.id_data = v_data.data.drivers_license
+                data.verified = true
+
+            } else {
+                res.status(400).json({
+                    message: "Driver's license data does not match user details",
+                })
+            }
+
+        } else {
+
+        }
+    }
+
+    if (id_type === "international_passport") {
+        let v_data = await qore_international_passport_verification(id_number)
+
+        if (v_data.data.passport) {
+            if (`${v_data.data.passport.firstname} ${v_data.data.passport.lastname}`
+                .toLowerCase()
+                .includes(user_data.first_name.toLowerCase().trim())
+                &&
+                `${v_data.data.passport.firstname} ${v_data.data.passport.lastname}`
+                    .toLowerCase()
+                    .includes(user_data.last_name.toLowerCase().trim())
+            ) {
+
+                data.id_data = v_data.data.passport
+                data.verified = true
+
+            } else {
+                res.status(400).json({
+                    message: "Passport data does not match user details",
+                })
+            }
+
+        } else {
+
+        }
+    }
+
 
     if (req.file) {
         let file = req.file
@@ -123,7 +241,9 @@ const loan_request_identification = async (req, res) => {
         $set: {
             id_type,
             id_number,
-            id_document: data
+            id_document: data,
+            id_data: data.id_data,
+            id_verified: data.verified
         }
     })
         .then(loan_request => {

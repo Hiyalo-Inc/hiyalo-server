@@ -33,6 +33,12 @@ const loanRequestSchema = new mongoose.Schema({
     id_document: {
         type: Object
     },
+    id_data: {
+        type: Object
+    },
+    id_verified: {
+        type: Boolean
+    },
     // 
     utility_bill_document: {
         type: Object
@@ -87,6 +93,10 @@ const loanRequestSchema = new mongoose.Schema({
     },
     repayment_duration: {
         type: String
+    },
+    repayment_duration_type: {
+        type: String,
+        default: "month"
     },
     // 
     bvn: {
